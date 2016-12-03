@@ -18,14 +18,13 @@ import com.example.lenovo.networktools.utils.FileUtils;
 
 
 /**
+ * GeneralCommand
  * Created by 10129302 on 15-2-6.
  */
 public class GeneralCommand
 {
 
     private static final String tag = GeneralCommand.class.getSimpleName();
-
-    private static String TCP_DUMP_NAME = "tcpdump";
 
     /**
      * 简单的请求root权限
@@ -38,7 +37,6 @@ public class GeneralCommand
     /**
      * 对于root的手机进行adb connect
      *
-     * @return
      */
     public static void AdbConnect()
     {
@@ -59,12 +57,12 @@ public class GeneralCommand
     /**
      * 手机抓包程序
      * 
-     * @param context
      */
     public static void TcpDump(Context context)
     {
         chmod("data/local");
 
+        String TCP_DUMP_NAME = "tcpdump";
         File file = new File("data/local/", TCP_DUMP_NAME);
 
         if (file.exists())
@@ -72,8 +70,8 @@ public class GeneralCommand
             return;
         }
 
-        InputStream is = null;
-        OutputStream os = null;
+        InputStream is;
+        OutputStream os;
         AssetManager am = context.getAssets();
         try
         {
@@ -114,15 +112,12 @@ public class GeneralCommand
         if (!TextUtils.isEmpty(result))
         {
             String[] pids = result.split("\n");
-            if (null != pids)
+            String[] killCmds = new String[pids.length];
+            for (int i = 0; i < pids.length; ++i)
             {
-                String[] killCmds = new String[pids.length];
-                for (int i = 0; i < pids.length; ++i)
-                {
-                    killCmds[i] = "kill -9 " + pids[i];
-                }
-                CommandExecutor.execCmd(killCmds);
+                killCmds[i] = "kill -9 " + pids[i];
             }
+            CommandExecutor.execCmd(killCmds);
         }
     }
 
@@ -130,7 +125,7 @@ public class GeneralCommand
     {
         InputStreamReader isr = new InputStreamReader(is);
         BufferedReader br = new BufferedReader(isr);
-        String line = null;
+        String line;
         StringBuilder sb = new StringBuilder();
         try
         {
